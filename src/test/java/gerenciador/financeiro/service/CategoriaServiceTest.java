@@ -4,6 +4,8 @@ import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.repository.CategoriaRepository;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -33,6 +35,25 @@ public class CategoriaServiceTest {
         });
 
        assertEquals("Nome da categoria é um campo obrigatorio!", erro.getMessage());
+    }
+
+
+    @Test
+    void deveRetornarUmaListaDeCategorias(){
+        CategoriaRepository repository = mock(CategoriaRepository.class);
+        CategoriaService service = new CategoriaService(repository);
+
+        Categoria categoria = new Categoria("Alimentos", "Gastos com comida");
+        Categoria categoria1 = new Categoria("Bebidas", "gastos com bebidas");
+
+        List<Categoria> listaMock = List.of(categoria, categoria1);
+
+        when(repository.listarTodas()).thenReturn(listaMock);
+
+        List<Categoria> resultado = service.listarCategorias();
+
+        assertEquals(2, resultado.size());
+        assertEquals("Alimentos", resultado.get(0).getNome());
     }
 
 }
