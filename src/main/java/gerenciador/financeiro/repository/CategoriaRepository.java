@@ -31,7 +31,7 @@ public class CategoriaRepository {
     }
 
     public Categoria buscarPorNome(String nome){
-        String sql = "SELECT * FROM categoria WHERE UPPER(nome) = ?";
+        String sql = "SELECT * FROM categoria WHERE UPPER(nome) LIKE ?";
         String parametroLike = nome.toUpperCase();
         Categoria categoria = template.queryForObject(sql, new BeanPropertyRowMapper<>(Categoria.class) ,parametroLike);
         return categoria;

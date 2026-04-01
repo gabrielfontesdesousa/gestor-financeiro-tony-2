@@ -3,6 +3,7 @@ package gerenciador.financeiro.model;
 import java.time.LocalDate;
 
 public class Meta {
+    private Integer id;
     private Double valorMeta;
     private Double valorAtual;
     private LocalDate dtFinal;
@@ -21,9 +22,18 @@ public class Meta {
 
     @Override
     public String toString() {
-        return "Meta{" +
-                "valorMeta=" + valorMeta +
-                ", valorAtual=" + valorAtual + '}';
+        return "Meta: " + "\n" +
+                "ID: " + id + "\n" +
+                "valor da Meta: " + valorMeta + "\n" +
+                "valor Atual: " + valorAtual;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setValorMeta(Double valorMeta) {
@@ -44,8 +54,5 @@ public class Meta {
 
     public void setDtFinal(LocalDate dtFinal) {
         this.dtFinal = dtFinal;
-    }
-    public Double porcentagemAtingido(){
-        return getValorAtual() / getValorMeta() * 100;
     }
 }

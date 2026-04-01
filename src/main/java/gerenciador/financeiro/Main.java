@@ -193,16 +193,16 @@ public class Main {
                 case 1:
                     System.out.println(">>> Cadastrar transação");
 
-                    // Valor
+
                     System.out.print("Valor da transação: ");
                     Double valor = leitor.nextDouble();
                     leitor.nextLine();
 
-                    // Descrição
+
                     System.out.print("Descrição: ");
                     String descricao = leitor.nextLine();
 
-                    // Tipo
+
                     System.out.println("Tipo da transação:");
                     System.out.println("  1 - Receita");
                     System.out.println("  2 - Despesa");
@@ -212,7 +212,7 @@ public class Main {
                     String tipo = (tipoOpcao == 1) ? "RECEITA" : "DESPESA";
 
                     LocalDateTime dataHora = LocalDateTime.now();
-                    // Categoria — lista as disponíveis para o usuário escolher pelo ID
+
                     System.out.println("\nCategorias disponíveis:");
                     List<Categoria> categorias = categoriaService.listarCategorias();
 
@@ -228,7 +228,7 @@ public class Main {
                     Integer categoriaId = leitor.nextInt();
                     leitor.nextLine();
 
-                    // Valida se a categoria existe
+
                     Categoria categoriaSelecionada = categoriaService.buscarCategoriaPorId(categoriaId);
                     if (categoriaSelecionada == null) {
                         System.out.println("Categoria não encontrada. Transação não cadastrada.");
@@ -236,7 +236,7 @@ public class Main {
                         break;
                     }
 
-                    // Monta e salva a transação
+
                     Transacao transacao = new Transacao(valor, dataHora, descricao, tipo, categoriaId);
                     transacaoService.cadastrarTransacao(transacao);
                     pausar();
@@ -347,8 +347,8 @@ public class Main {
                 case 2:
                     System.out.println(">>> Listar metas");
                     metaService.listarMetas().forEach(m -> {
-                        System.out.println("Valor atual: " + m.getValorAtual());
-                        System.out.println("Valor final: " + m.getValorMeta());
+                        System.out.println("Valor da Meta: " + m.getValorMeta());
+                        System.out.println("Valor Atual: " + m.getValorAtual());
                         System.out.println("------------------");
                     });
                     pausar();
@@ -377,9 +377,9 @@ public class Main {
                     Double novoValor = leitor.nextDouble();
                     leitor.nextLine();
                     meta = metaService.buscarMetaPorId(id);
-                    meta.setValorMeta(novoValor);
+                    meta.setValorAtual(novoValor);
                     metaService.atualizarProgressoMeta(id, novoValor);
-                    System.out.println(meta.toString());
+                    System.out.println(meta);
                     System.out.println("Meta foi atualizada");
                     pausar();
                     break;
