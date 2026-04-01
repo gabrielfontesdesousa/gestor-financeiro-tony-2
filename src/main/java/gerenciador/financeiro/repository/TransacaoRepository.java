@@ -22,16 +22,17 @@ public class TransacaoRepository {
         try {
             // CORRIGIDO: inclui data_hora e categoria_id no INSERT
             String sql = """
-                    INSERT INTO transacao (valor, data_hora, descricao, tipo, categoria_id)
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO transacao (valor, data_hora, descricao, tipo, status, categoria_id)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     """;
 
             jdbcTemplate.update(
                     sql,
                     transacao.getValor(),
-                    transacao.getDtHora(),
+                    transacao.getDataHora(),
                     transacao.getDescricao(),
-                    transacao.getTipoTransacao(),
+                    transacao.getTipo(),
+                    transacao.getStatus(),
                     transacao.getCategoriaId()
             );
 
@@ -120,10 +121,10 @@ public class TransacaoRepository {
             jdbcTemplate.update(
                     sql,
                     transacao.getValor(),
-                    transacao.getDtHora(),
-                    transacao.getStatus().name(),
+                    transacao.getDataHora(),
+                    transacao.getStatus(),
                     transacao.getDescricao(),
-                    transacao.getTipoTransacao(),
+                    transacao.getTipo(),
                     transacao.getCategoriaId(),
                     transacao.getId()
             );
