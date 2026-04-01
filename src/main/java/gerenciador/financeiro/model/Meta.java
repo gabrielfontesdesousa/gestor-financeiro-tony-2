@@ -6,7 +6,7 @@ public class Meta {
     private Integer id;
     private Double valorMeta;
     private Double valorAtual;
-    private LocalDate dtFinal;
+    private LocalDate dataLimite;
 
     public Meta() {
     }
@@ -14,6 +14,12 @@ public class Meta {
     public Meta(Double valorFinal, Double valorAtual) {
         this.valorMeta = valorFinal;
         this.valorAtual = valorAtual;
+    }
+
+    public Meta(Double valorFinal, Double valorAtual, LocalDate dataLimite) {
+        this.valorMeta = valorFinal;
+        this.valorAtual = valorAtual;
+        this.dataLimite = dataLimite;
     }
 
     public Double getValorMeta() {
@@ -24,8 +30,9 @@ public class Meta {
     public String toString() {
         return "Meta: " + "\n" +
                 "ID: " + id + "\n" +
-                "valor da Meta: " + valorMeta + "\n" +
-                "valor Atual: " + valorAtual;
+                "Valor da Meta: " + valorMeta + "\n" +
+                "Valor Atual: " + valorAtual  + "\n" +
+                "Data Limite: " + dataLimite;
     }
 
     public Integer getId() {
@@ -48,11 +55,11 @@ public class Meta {
         this.valorAtual = valorAtual;
     }
 
-    public LocalDate getDtFinal() {
-        return dtFinal;
+    public LocalDate getDataLimite() {
+        return dataLimite;
     }
 
-    public void setDtFinal(LocalDate dtFinal) {
-        this.dtFinal = dtFinal;
+    public void setDataLimite(LocalDate dataLimite) {
+        this.dataLimite = dataLimite;
     }
 }

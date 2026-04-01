@@ -17,9 +17,9 @@ public class Categoria {
     public String toString() {
         return "Categoria:"
                 + '\n' +
-                "Id: " + id + '\n' +
-                "nome: " + nome + '\n' +
-                "descricao: " + descricao;
+                "ID: " + id + '\n' +
+                "Nome: " + nome + '\n' +
+                "Descrição: " + descricao;
     }
     public Categoria() {
     }

@@ -14,7 +14,7 @@ public class MetaRepository {
 
     public void salvar(Meta meta) {
         String sql = "INSERT INTO meta VALUES (DEFAULT, ?, ?, ?)";
-        template.update(sql, meta.getValorMeta(), meta.getValorAtual(), meta.getDtFinal());
+        template.update(sql, meta.getValorMeta(), meta.getValorAtual(), meta.getDataLimite());
     }
 
     public List<Meta> listarTodas() {
@@ -30,8 +30,8 @@ public class MetaRepository {
     }
 
     public void atualizar(Integer id, Meta metaAtualizada) {
-        String sql = "UPDATE meta SET valor_meta = ? WHERE id = ?";
-        template.update(sql, metaAtualizada.getValorMeta(), id);
+        String sql = "UPDATE meta SET valor_meta = ?, data_limite = ? WHERE id = ?";
+        template.update(sql, metaAtualizada.getValorMeta(), metaAtualizada.getDataLimite(), id);
     }
 
     public void atualizarProgresso(Integer id, Double novoValorAtual){

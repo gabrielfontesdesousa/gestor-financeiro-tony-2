@@ -14,6 +14,7 @@ import gerenciador.financeiro.service.CategoriaService;
 import gerenciador.financeiro.service.MetaService;
 import gerenciador.financeiro.service.TransacaoService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -333,14 +334,31 @@ public class Main {
             switch (opcao) {
                 case 1:
                     System.out.println(">>> Cadastrar meta");
-                    System.out.println("Valor de Meta:");
+
+                    System.out.print("Valor de Meta: ");
                     Double valorFinal = leitor.nextDouble();
                     leitor.nextLine();
-                    System.out.println("Valor Atual:");
+
+                    System.out.print("Valor Atual: ");
                     Double valorAtual = leitor.nextDouble();
                     leitor.nextLine();
-                    Meta meta = new Meta(valorFinal, valorAtual);
+
+                    System.out.print("Data limite (dd/MM/yyyy): ");
+                    String dataInput = leitor.nextLine();
+
+                    LocalDate dataLimite;
+
+                    try {
+                        dataLimite = LocalDate.parse(dataInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de data inválido! Use dd/MM/yyyy");
+                        pausar();
+                        break;
+                    }
+
+                    Meta meta = new Meta(valorFinal, valorAtual, dataLimite);
                     metaService.cadastrarMeta(meta);
+
                     System.out.println("Sua meta foi registrada com sucesso!");
                     pausar();
                     break;
@@ -349,6 +367,7 @@ public class Main {
                     metaService.listarMetas().forEach(m -> {
                         System.out.println("Valor da Meta: " + m.getValorMeta());
                         System.out.println("Valor Atual: " + m.getValorAtual());
+                        System.out.println("Data Limite: " + m.getDataLimite());
                         System.out.println("------------------");
                     });
                     pausar();

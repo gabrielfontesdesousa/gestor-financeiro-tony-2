@@ -4,6 +4,7 @@ import gerenciador.financeiro.model.Meta;
 import gerenciador.financeiro.repository.MetaRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class MetaService {
@@ -20,6 +21,9 @@ public class MetaService {
         }
         if (meta.getValorAtual() < 0){
             throw new RuntimeException("O valor atual não pode ser negativo");
+        }
+        if (meta.getDataLimite().isBefore(LocalDate.now())){
+            throw new RuntimeException("Data deve ser futura!");
         }
         metaRepository.salvar(meta);
     }
@@ -43,6 +47,9 @@ public class MetaService {
     public void atualizarMeta(Integer id, Meta meta){
         if (meta.getValorMeta() <= meta.getValorAtual()){
             throw new RuntimeException("Meta não pode ser inferior ou igual ao valor atual!");
+        }
+        if (meta.getDataLimite().isBefore(LocalDate.now())){
+            throw new RuntimeException("Data deve ser futura!");
         }
         metaRepository.atualizar(id, meta);
         System.out.println("Meta foi atualizada!");

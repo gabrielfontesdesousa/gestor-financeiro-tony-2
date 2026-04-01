@@ -60,14 +60,13 @@ public class Transacao {
 
     @Override
     public String toString() {
-        return "Transacao{" +
-                "id=" + id +
-                ", valor=" + valor +
-                ", dataHora=" + dataHora +
-                ", status=" + status +
-                ", descricao='" + descricao + '\'' +
-                ", tipo=" + tipo +
-                ", categoriaId=" + categoriaId +
-                '}';
+        return "Transacao:" +
+                "ID: " + id + '\n' +
+                "Valor: " + valor + '\n' +
+                "Data Hora: " + dataHora + '\n' +
+                "Status: " + status + '\n' +
+                "Descrição: " + descricao + '\n' +
+                "Tipo: " + tipo + '\n' +
+                "Categoria ID: " + categoriaId;
     }
 }
