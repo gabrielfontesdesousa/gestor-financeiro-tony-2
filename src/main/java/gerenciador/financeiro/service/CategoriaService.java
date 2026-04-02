@@ -3,6 +3,7 @@ package gerenciador.financeiro.service;
 
 import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.repository.CategoriaRepository;
+import gerenciador.financeiro.util.ValidatorUtil;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
@@ -16,15 +17,7 @@ public class CategoriaService {
     }
 
     public void cadastrarCategoria(Categoria categoria) {
-        if (categoria.getNome() == null || categoria.getNome().isBlank()) {
-            throw new RuntimeException("Nome da categoria é um campo obrigatorio!");
-        }
-        if (categoria.getDescricao() == null || categoria.getDescricao().isBlank()) {
-            throw new RuntimeException("Descrição da categoria é um campo obrigatorio!");
-        }
-        if (categoria.getNome().length() < 3) {
-            throw new RuntimeException("Nome deve conter ao menos três caracteres");
-        }
+        ValidatorUtil.validar(categoria);
         repository.salvar(categoria);
     }
 
@@ -44,12 +37,6 @@ public class CategoriaService {
     }
 
     public Categoria buscarCategoriaPorNome(String nome) {
-        if (nome == null || nome.isBlank()) {
-            throw new RuntimeException("Nome da categoria é um campo obrigatorio!");
-        }
-        if (nome.length() < 3) {
-            throw new RuntimeException("Nome deve conter ao menos três caracteres");
-        }
         try {
             return repository.buscarPorNome(nome);
         } catch (EmptyResultDataAccessException e) {

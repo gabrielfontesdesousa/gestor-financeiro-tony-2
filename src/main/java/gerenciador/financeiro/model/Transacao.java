@@ -1,20 +1,33 @@
 package gerenciador.financeiro.model;
 
 import gerenciador.financeiro.enums.StatusTransacao;
+import gerenciador.financeiro.enums.TipoTransacao;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
 public class Transacao {
+
     private Integer id;
+    @NotNull(message = "Campo não pode ser nulo")
+    @Positive(message = "Campo deve ser positivo")
     private Double valor;
-    private LocalDateTime dataHora;
-    private String status;
+
+    @NotNull(message = "Campo não pode ser nulo")
+    private LocalDateTime dtHora;
+    private StatusTransacao status;
+    @NotBlank(message = "Campo não pode estar em branco")
+    @Size(min = 3, max = 1000, message = "Campo deve estar entre 3 e 1000")
     private String descricao;
-    private String tipo;
+    private String tipoTransacao;
+    // ADICIONADO: campo categoriaId
+    @NotNull(message = "Campo não pode ser nulo")
     private Integer categoriaId;
 
-    public Transacao() {
-    }
+    public Transacao() {}
 
     public Transacao(Double valor, LocalDateTime dataHora, String descricao, String tipo, Integer categoriaId) {
         this.valor = valor;

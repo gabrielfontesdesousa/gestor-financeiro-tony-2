@@ -1,11 +1,16 @@
 package gerenciador.financeiro.model;
 
 import gerenciador.financeiro.enums.StatusTransacao;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
 public class LogTransacao {
+    @NotNull(message = "Campo não pode ser nulo")
+    @PastOrPresent(message = "A data deve estar no passado ou presente")
     private LocalDateTime dtHora;
+    @NotBlank(message = "O campo não pode estar em branco")
+    @Size(min = 3, max = 255, message = "O campo deve ter entre 3 e 255 caracteres")
     private String descricao;
     private StatusTransacao status;
 

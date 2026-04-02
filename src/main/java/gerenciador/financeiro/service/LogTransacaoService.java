@@ -3,6 +3,7 @@ package gerenciador.financeiro.service;
 import gerenciador.financeiro.db.ConexaoDB;
 import gerenciador.financeiro.model.LogTransacao;
 import gerenciador.financeiro.repository.LogTransacaoRepository;
+import gerenciador.financeiro.util.ValidatorUtil;
 import org.apache.commons.logging.Log;
 
 import java.time.LocalDateTime;
@@ -16,8 +17,7 @@ public class LogTransacaoService {
     }
 
     public void registrarLog(LogTransacao logTransacao){
-        validar(logTransacao);
-
+        ValidatorUtil.validar(logTransacao);
         if (logTransacao.getDtHora() == null) {
             logTransacao.setDtHora(LocalDateTime.now());
         }
@@ -34,18 +34,5 @@ public class LogTransacaoService {
     public List<LogTransacao> listarLogsPorTransacao(){
         List<LogTransacao> result = logTransacaoRepository.listarPorTransacao();
         return result;
-    }
-    private void validar(LogTransacao log) {
-        if (log == null) {
-            throw new IllegalArgumentException("Log não pode ser nulo.");
-        }
-
-        if (log.getDescricao() == null || log.getDescricao().isBlank()) {
-            throw new IllegalArgumentException("Descrição do log obrigatória.");
-        }
-
-        if (log.getStatus() == null) {
-            throw new IllegalArgumentException("Status do log obrigatório.");
-        }
     }
 }

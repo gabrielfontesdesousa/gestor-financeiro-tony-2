@@ -1,8 +1,16 @@
 package gerenciador.financeiro.model;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class Categoria {
+    @NotBlank(message = "O campo não pode estar em branco")
+    @Size(min = 3, max = 255, message = "O campo deve ter entre 3 e 255 caracteres")
     private String nome;
+
+    @NotBlank(message = "O campo não pode estar em branco")
+    @Size(min = 3, max = 255, message = "O campo deve ter entre 3 e 255 caracteres")
     private String descricao;
+
     private Integer id;
 
     public Integer getId() {
