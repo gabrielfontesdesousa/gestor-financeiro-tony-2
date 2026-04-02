@@ -34,7 +34,7 @@ public class CategoriaServiceTest {
             service.cadastrarCategoria(categoria);
         });
 
-       assertEquals("Nome da categoria é um campo obrigatorio!", erro.getMessage());
+       assertEquals("Erros de validação:\nCampo 'nome': O campo deve ter entre 3 e 255 caracteres\nCampo 'nome': O campo não pode estar em branco\n", erro.getMessage());
     }
 
 

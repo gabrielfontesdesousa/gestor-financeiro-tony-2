@@ -26,7 +26,7 @@ public class TransacaoService {
 
     public void cadastrarTransacao(Transacao transacao) {
         ValidatorUtil.validar(transacao);
-        transacao.setStatus(StatusTransacao.PENDENTE);
+        transacao.setStatus("Operação Concluida");
 
         repository.salvar(transacao);
         System.out.println("Transação cadastrada com sucesso!");

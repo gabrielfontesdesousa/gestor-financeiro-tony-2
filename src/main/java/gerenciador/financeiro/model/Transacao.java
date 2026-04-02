@@ -1,7 +1,6 @@
 package gerenciador.financeiro.model;
 
 import gerenciador.financeiro.enums.StatusTransacao;
-import gerenciador.financeiro.enums.TipoTransacao;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -17,12 +16,12 @@ public class Transacao {
     private Double valor;
 
     @NotNull(message = "Campo não pode ser nulo")
-    private LocalDateTime dtHora;
-    private StatusTransacao status;
+    private LocalDateTime dataHora;
+    private String status;
     @NotBlank(message = "Campo não pode estar em branco")
     @Size(min = 3, max = 1000, message = "Campo deve estar entre 3 e 1000")
     private String descricao;
-    private String tipoTransacao;
+    private String tipo;
     // ADICIONADO: campo categoriaId
     @NotNull(message = "Campo não pode ser nulo")
     private Integer categoriaId;

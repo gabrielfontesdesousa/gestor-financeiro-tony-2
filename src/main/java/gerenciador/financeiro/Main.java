@@ -392,7 +392,7 @@ public class Main {
                     System.out.println("Informe o ID da meta a ser atualizada: ");
                     id = leitor.nextInt();
                     leitor.nextLine();
-                    System.out.println("Novo valor da atual:");
+                    System.out.println("Novo valor atual:");
                     Double novoValor = leitor.nextDouble();
                     leitor.nextLine();
                     meta = metaService.buscarMetaPorId(id);

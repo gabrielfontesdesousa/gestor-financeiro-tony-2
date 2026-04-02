@@ -1,16 +1,18 @@
 package gerenciador.financeiro.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public class Meta {
-    @NotBlank(message = "Campo não pode estar em branco")
-    @Size(min = 3, max = 255, message = "O campo deve ter entre 3 e 255 caracteres")
-    private Double valorMeta;
 
+    private Integer id;
+    @NotNull(message = "Campo não pode estar em branco")
+    @Positive(message = "Meta não pode ser um valor negativo")
+    private Double valorMeta;
+    @PositiveOrZero(message = "Valor atual deve ser um valor positivo ou igual a 0")
     private Double valorAtual;
+    @Future(message = "Data deve ser futura")
     private LocalDate dataLimite;
 
     public Meta() {
