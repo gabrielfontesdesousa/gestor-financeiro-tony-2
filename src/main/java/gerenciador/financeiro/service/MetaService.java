@@ -2,6 +2,7 @@ package gerenciador.financeiro.service;
 
 import gerenciador.financeiro.model.Meta;
 import gerenciador.financeiro.repository.MetaRepository;
+import gerenciador.financeiro.util.ValidatorUtil;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
@@ -15,12 +16,7 @@ public class MetaService {
     }
 
     public void cadastrarMeta(Meta meta){
-        if (meta.getValorMeta() <= 0){
-            throw new RuntimeException("A meta não pode ser um valor negativo ou igual a zero");
-        }
-        if (meta.getValorAtual() < 0){
-            throw new RuntimeException("O valor atual não pode ser negativo");
-        }
+        ValidatorUtil.validar(meta);
         metaRepository.salvar(meta);
     }
 
@@ -49,9 +45,6 @@ public class MetaService {
     }
 
     public void atualizarProgressoMeta(Integer id, Double novoValorAtual){
-        if (novoValorAtual < 0 ){
-            throw new RuntimeException("Valor não pode ser menor do que 0 - (zero)");
-        }
         metaRepository.atualizarProgresso(id, novoValorAtual);
     }
 
