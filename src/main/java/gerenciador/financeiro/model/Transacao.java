@@ -29,28 +29,25 @@ public class Transacao {
 
     public Transacao() {}
 
-    // Construtor completo com data e categoria
-    public Transacao(Double valor, LocalDateTime dtHora, String descricao, String tipoTransacao, Integer categoriaId) {
+    public Transacao(Double valor, LocalDateTime dataHora, String descricao, String tipo, Integer categoriaId) {
         this.valor = valor;
-        this.dtHora = dtHora;
+        this.dataHora = dataHora;
         this.descricao = descricao;
-        this.tipoTransacao = tipoTransacao;
+        this.tipo = tipo;
         this.categoriaId = categoriaId;
     }
 
-    // Construtor sem categoria (mantido para compatibilidade)
-    public Transacao(Double valor, LocalDateTime dtHora, String descricao, String tipoTransacao) {
+    public Transacao(Double valor, LocalDateTime dataHora, String descricao, String tipo) {
         this.valor = valor;
-        this.dtHora = dtHora;
+        this.dataHora = dataHora;
         this.descricao = descricao;
-        this.tipoTransacao = tipoTransacao;
+        this.tipo = tipo;
     }
 
-    // Construtor mínimo (mantido para compatibilidade)
-    public Transacao(Double valor, String descricao, String tipoTransacao) {
+    public Transacao(Double valor, String descricao, String tipo) {
         this.valor = valor;
         this.descricao = descricao;
-        this.tipoTransacao = tipoTransacao;
+        this.tipo = tipo;
     }
 
     public Integer getId() { return id; }
@@ -59,31 +56,30 @@ public class Transacao {
     public Double getValor() { return valor; }
     public void setValor(Double valor) { this.valor = valor; }
 
-    public LocalDateTime getDtHora() { return dtHora; }
-    public void setDtHora(LocalDateTime dtHora) { this.dtHora = dtHora; }
+    public LocalDateTime getDataHora() { return dataHora; }
+    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
 
-    public StatusTransacao getStatus() { return status; }
-    public void setStatus(StatusTransacao status) { this.status = status; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public String getDescricao() { return descricao; }
     public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public String getTipoTransacao() { return tipoTransacao; }
-    public void setTipoTransacao(String tipoTransacao) { this.tipoTransacao = tipoTransacao; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 
     public Integer getCategoriaId() { return categoriaId; }
     public void setCategoriaId(Integer categoriaId) { this.categoriaId = categoriaId; }
 
     @Override
     public String toString() {
-        return "Transacao{" +
-                "id=" + id +
-                ", valor=" + valor +
-                ", dtHora=" + dtHora +
-                ", status=" + status +
-                ", descricao='" + descricao + '\'' +
-                ", tipoTransacao=" + tipoTransacao +
-                ", categoriaId=" + categoriaId + // CORRIGIDO: era 'id' por engano
-                '}';
+        return "Transacao:" +
+                "ID: " + id + '\n' +
+                "Valor: " + valor + '\n' +
+                "Data Hora: " + dataHora + '\n' +
+                "Status: " + status + '\n' +
+                "Descrição: " + descricao + '\n' +
+                "Tipo: " + tipo + '\n' +
+                "Categoria ID: " + categoriaId;
     }
 }

@@ -17,6 +17,7 @@ CREATE TABLE transacao
     data_hora    TIMESTAMP,
     descricao    VARCHAR(255)   NOT NULL,
     tipo         VARCHAR(20)    NOT NULL,
+    status       VARCHAR(20)    NOT NULL,
     categoria_id INT,
     CONSTRAINT fk_transacao_categoria
         FOREIGN KEY (categoria_id) REFERENCES categoria (id)

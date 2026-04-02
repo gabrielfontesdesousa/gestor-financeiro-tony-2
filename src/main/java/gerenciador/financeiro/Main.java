@@ -2,6 +2,7 @@ package gerenciador.financeiro;
 
 import gerenciador.financeiro.db.ConexaoDB;
 import gerenciador.financeiro.db.InicializadorDB;
+import gerenciador.financeiro.enums.StatusTransacao;
 import gerenciador.financeiro.enums.TipoTransacao;
 import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.model.Meta;
@@ -13,6 +14,7 @@ import gerenciador.financeiro.service.CategoriaService;
 import gerenciador.financeiro.service.MetaService;
 import gerenciador.financeiro.service.TransacaoService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -23,20 +25,12 @@ public class Main {
     static Scanner leitor = new Scanner(System.in);
     static ConexaoDB conexaoDB = new ConexaoDB();
 
-    static TransacaoService transacaoService =
-            new TransacaoService(new TransacaoRepository(conexaoDB.getJdbcTemplate()));
+    static TransacaoService transacaoService = new TransacaoService(new TransacaoRepository(conexaoDB.getJdbcTemplate()));
 
-    static CategoriaService categoriaService =
-            new CategoriaService(
-                    new CategoriaRepository(conexaoDB.getJdbcTemplate())
-            );
-    static MetaService metaService =
-            new MetaService(
-                    new MetaRepository(conexaoDB.getJdbcTemplate())
-            );
+    static CategoriaService categoriaService = new CategoriaService(new CategoriaRepository(conexaoDB.getJdbcTemplate()));
+    static MetaService metaService = new MetaService(new MetaRepository(conexaoDB.getJdbcTemplate()));
 
 
-    // Formato padrão para entrada de data e hora pelo usuário
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public static void main(String[] args) {
@@ -62,9 +56,15 @@ public class Main {
             leitor.nextLine();
 
             switch (opcao) {
-                case 1: telaCategorias(); break;
-                case 2: telaTransacoes(); break;
-                case 3: telaMetas(); break;
+                case 1:
+                    telaCategorias();
+                    break;
+                case 2:
+                    telaTransacoes();
+                    break;
+                case 3:
+                    telaMetas();
+                    break;
                 case 0:
                     executando = false;
                     System.out.println("Saindo do sistema...");
@@ -194,51 +194,26 @@ public class Main {
                 case 1:
                     System.out.println(">>> Cadastrar transação");
 
-                    // Valor
+
                     System.out.print("Valor da transação: ");
                     Double valor = leitor.nextDouble();
                     leitor.nextLine();
 
-                    // Descrição
+
                     System.out.print("Descrição: ");
                     String descricao = leitor.nextLine();
 
-                    // Tipo
+
                     System.out.println("Tipo da transação:");
                     System.out.println("  1 - Receita");
                     System.out.println("  2 - Despesa");
                     System.out.print("Escolha: ");
                     int tipoOpcao = leitor.nextInt();
                     leitor.nextLine();
-                    String tipo = (tipoOpcao == 1) ? "RECEITA": "DESPESA";
+                    String tipo = (tipoOpcao == 1) ? "RECEITA" : "DESPESA";
 
-                    // Data e hora — com opção de usar a atual ou digitar manualmente
-                    LocalDateTime dataHora = null;
-                    System.out.println("Data e hora:");
-                    System.out.println("  1 - Usar data e hora atual (" +
-                            LocalDateTime.now().format(formatter) + ")");
-                    System.out.println("  2 - Digitar manualmente (formato: dd/MM/yyyy HH:mm)");
-                    System.out.print("Escolha: ");
-                    int dataOpcao = leitor.nextInt();
-                    leitor.nextLine();
+                    LocalDateTime dataHora = LocalDateTime.now();
 
-                    if (dataOpcao == 1) {
-                        dataHora = LocalDateTime.now();
-                    } else {
-                        boolean dataValida = false;
-                        while (!dataValida) {
-                            System.out.print("Informe a data e hora (dd/MM/yyyy HH:mm): ");
-                            String dataInput = leitor.nextLine();
-                            try {
-                                dataHora = LocalDateTime.parse(dataInput, formatter);
-                                dataValida = true;
-                            } catch (DateTimeParseException e) {
-                                System.out.println("Formato inválido! Use dd/MM/yyyy HH:mm (ex: 25/03/2025 14:30)");
-                            }
-                        }
-                    }
-
-                    // Categoria — lista as disponíveis para o usuário escolher pelo ID
                     System.out.println("\nCategorias disponíveis:");
                     List<Categoria> categorias = categoriaService.listarCategorias();
 
@@ -248,15 +223,13 @@ public class Main {
                         break;
                     }
 
-                    categorias.forEach(c ->
-                            System.out.println("  [" + c.getId() + "] " + c.getNome() + " - " + c.getDescricao())
-                    );
+                    categorias.forEach(c -> System.out.println("  [" + c.getId() + "] " + c.getNome() + " - " + c.getDescricao()));
 
                     System.out.print("Informe o ID da categoria: ");
                     Integer categoriaId = leitor.nextInt();
                     leitor.nextLine();
 
-                    // Valida se a categoria existe
+
                     Categoria categoriaSelecionada = categoriaService.buscarCategoriaPorId(categoriaId);
                     if (categoriaSelecionada == null) {
                         System.out.println("Categoria não encontrada. Transação não cadastrada.");
@@ -264,7 +237,7 @@ public class Main {
                         break;
                     }
 
-                    // Monta e salva a transação
+
                     Transacao transacao = new Transacao(valor, dataHora, descricao, tipo, categoriaId);
                     transacaoService.cadastrarTransacao(transacao);
                     pausar();
@@ -279,10 +252,9 @@ public class Main {
                         lista.forEach(t -> {
                             System.out.println("ID: " + t.getId());
                             System.out.println("Valor: R$ " + t.getValor());
-                            System.out.println("Data/Hora: " + (t.getDtHora() != null
-                                    ? t.getDtHora().format(formatter) : "não informada"));
+                            System.out.println("Data/Hora: " + (t.getDataHora() != null ? t.getDataHora().format(formatter) : "não informada"));
                             System.out.println("Descrição: " + t.getDescricao());
-                            System.out.println("Tipo: " + t.getTipoTransacao());
+                            System.out.println("Tipo: " + t.getTipo());
                             System.out.println("Status: " + t.getStatus());
                             System.out.println("Categoria ID: " + t.getCategoriaId());
                             System.out.println("------------------");
@@ -300,10 +272,9 @@ public class Main {
                     if (encontrada != null) {
                         System.out.println("ID: " + encontrada.getId());
                         System.out.println("Valor: R$ " + encontrada.getValor());
-                        System.out.println("Data/Hora: " + (encontrada.getDtHora() != null
-                                ? encontrada.getDtHora().format(formatter) : "não informada"));
+                        System.out.println("Data/Hora: " + (encontrada.getDataHora() != null ? encontrada.getDataHora().format(formatter) : "não informada"));
                         System.out.println("Descrição: " + encontrada.getDescricao());
-                        System.out.println("Tipo: " + encontrada.getTipoTransacao());
+                        System.out.println("Tipo: " + encontrada.getTipo());
                         System.out.println("Categoria ID: " + encontrada.getCategoriaId());
                     } else {
                         System.out.println("Transação não encontrada.");
@@ -363,22 +334,40 @@ public class Main {
             switch (opcao) {
                 case 1:
                     System.out.println(">>> Cadastrar meta");
-                    System.out.println("Valor de Meta:");
+
+                    System.out.print("Valor de Meta: ");
                     Double valorFinal = leitor.nextDouble();
                     leitor.nextLine();
-                    System.out.println("Valor Atual:");
+
+                    System.out.print("Valor Atual: ");
                     Double valorAtual = leitor.nextDouble();
                     leitor.nextLine();
-                    Meta meta = new Meta(valorFinal, valorAtual);
+
+                    System.out.print("Data limite (dd/MM/yyyy): ");
+                    String dataInput = leitor.nextLine();
+
+                    LocalDate dataLimite;
+
+                    try {
+                        dataLimite = LocalDate.parse(dataInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Formato de data inválido! Use dd/MM/yyyy");
+                        pausar();
+                        break;
+                    }
+
+                    Meta meta = new Meta(valorFinal, valorAtual, dataLimite);
                     metaService.cadastrarMeta(meta);
+
                     System.out.println("Sua meta foi registrada com sucesso!");
                     pausar();
                     break;
                 case 2:
                     System.out.println(">>> Listar metas");
                     metaService.listarMetas().forEach(m -> {
-                        System.out.println("Valor atual: " + m.getValorAtual());
-                        System.out.println("Valor final: " + m.getValorMeta());
+                        System.out.println("Valor da Meta: " + m.getValorMeta());
+                        System.out.println("Valor Atual: " + m.getValorAtual());
+                        System.out.println("Data Limite: " + m.getDataLimite());
                         System.out.println("------------------");
                     });
                     pausar();
@@ -401,15 +390,15 @@ public class Main {
                 case 4:
                     System.out.println(">>> Atualizar Progresso");
                     System.out.println("Informe o ID da meta a ser atualizada: ");
-                     id = leitor.nextInt();
+                    id = leitor.nextInt();
                     leitor.nextLine();
                     System.out.println("Novo valor da atual:");
                     Double novoValor = leitor.nextDouble();
                     leitor.nextLine();
                     meta = metaService.buscarMetaPorId(id);
-                    meta.setValorMeta(novoValor);
+                    meta.setValorAtual(novoValor);
                     metaService.atualizarProgressoMeta(id, novoValor);
-                    System.out.println(meta.toString());
+                    System.out.println(meta);
                     System.out.println("Meta foi atualizada");
                     pausar();
                     break;

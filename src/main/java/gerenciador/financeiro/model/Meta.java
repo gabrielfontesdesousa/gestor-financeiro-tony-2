@@ -11,7 +11,7 @@ public class Meta {
     private Double valorMeta;
 
     private Double valorAtual;
-    private LocalDate dtFinal;
+    private LocalDate dataLimite;
 
     public Meta() {
     }
@@ -21,15 +21,31 @@ public class Meta {
         this.valorAtual = valorAtual;
     }
 
+    public Meta(Double valorFinal, Double valorAtual, LocalDate dataLimite) {
+        this.valorMeta = valorFinal;
+        this.valorAtual = valorAtual;
+        this.dataLimite = dataLimite;
+    }
+
     public Double getValorMeta() {
         return valorMeta;
     }
 
     @Override
     public String toString() {
-        return "Meta{" +
-                "valorMeta=" + valorMeta +
-                ", valorAtual=" + valorAtual + '}';
+        return "Meta: " + "\n" +
+                "ID: " + id + "\n" +
+                "Valor da Meta: " + valorMeta + "\n" +
+                "Valor Atual: " + valorAtual  + "\n" +
+                "Data Limite: " + dataLimite;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setValorMeta(Double valorMeta) {
@@ -44,14 +60,11 @@ public class Meta {
         this.valorAtual = valorAtual;
     }
 
-    public LocalDate getDtFinal() {
-        return dtFinal;
+    public LocalDate getDataLimite() {
+        return dataLimite;
     }
 
-    public void setDtFinal(LocalDate dtFinal) {
-        this.dtFinal = dtFinal;
-    }
-    public Double porcentagemAtingido(){
-        return getValorAtual() / getValorMeta() * 100;
+    public void setDataLimite(LocalDate dataLimite) {
+        this.dataLimite = dataLimite;
     }
 }
