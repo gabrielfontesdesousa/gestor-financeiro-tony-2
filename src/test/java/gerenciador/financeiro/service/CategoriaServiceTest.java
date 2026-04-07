@@ -2,20 +2,35 @@ package gerenciador.financeiro.service;
 
 import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.repository.CategoriaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class CategoriaServiceTest {
-    @Test
-    void deveCadastrarCategoriaComSucesso(){
-        CategoriaRepository repository = mock(CategoriaRepository.class);
-        CategoriaService service = new CategoriaService(repository);
+import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+public class CategoriaServiceTest {
+    @Mock
+    CategoriaRepository repository;
+
+    @InjectMocks
+    CategoriaService service;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+
+    }
+
+    @Test
+    void deveCadastrarCategoriaComSucesso() {
         Categoria categoria = new Categoria("Alimentação", "Gastos com comida");
 
         service.cadastrarCategoria(categoria);
@@ -24,9 +39,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveLancarErroQuandoNomeForVazio(){
-        CategoriaRepository repository = mock(CategoriaRepository.class);
-        CategoriaService service = new CategoriaService(repository);
+    void deveLancarErroQuandoNomeForVazio() {
 
         Categoria categoria = new Categoria("", "desc");
 
@@ -34,14 +47,13 @@ public class CategoriaServiceTest {
             service.cadastrarCategoria(categoria);
         });
 
-       assertEquals("Erros de validação:\nCampo 'nome': O campo deve ter entre 3 e 255 caracteres\nCampo 'nome': O campo não pode estar em branco\n", erro.getMessage());
+        assertTrue(erro.getMessage().contains("não pode estar em branco"));
+        assertTrue(erro.getMessage().contains("deve ter entre 3 e 255 caracteres"));
     }
 
 
     @Test
-    void deveRetornarUmaListaDeCategorias(){
-        CategoriaRepository repository = mock(CategoriaRepository.class);
-        CategoriaService service = new CategoriaService(repository);
+    void deveRetornarUmaListaDeCategorias() {
 
         Categoria categoria = new Categoria("Alimentos", "Gastos com comida");
         Categoria categoria1 = new Categoria("Bebidas", "gastos com bebidas");
@@ -54,6 +66,47 @@ public class CategoriaServiceTest {
 
         assertEquals(2, resultado.size());
         assertEquals("Alimentos", resultado.get(0).getNome());
+        verify(repository, times(1)).listarTodas();
     }
+
+    @Test
+    void deveRetornarErroSeListaVazia(){
+        List<Categoria> listaMock = new ArrayList<>();
+
+        when(repository.listarTodas()).thenReturn(listaMock);
+
+        RuntimeException erro = assertThrows(RuntimeException.class, () -> {
+            service.listarCategorias();
+        });
+
+        assertTrue(erro.getMessage().contains("Não existem categorias"));
+        verify(repository, times(1)).listarTodas();
+    }
+
+    @Test
+    void deveRetornarCategoriaPorIdSeExistir() {
+        Integer id = 1;
+        Categoria categoria = new Categoria("Alimentos", "Gastos com comida");
+
+        when(repository.buscarPorId(id)).thenReturn(categoria);
+        Categoria result = service.buscarCategoriaPorId(id);
+
+        assertEquals(categoria, result);
+        verify(repository, times(1)).buscarPorId(id);
+    }
+
+    @Test
+    void deveRetornarErroQuandoCategoriaIdNaoExistir() {
+        Integer id = 1;
+
+        when(repository.buscarPorId(id)).thenThrow(new EmptyResultDataAccessException(1));
+
+        RuntimeException erro = assertThrows(RuntimeException.class, () -> {
+            service.buscarCategoriaPorId(id);
+        });
+
+        assertTrue(erro.getMessage().contains("não existe"));
+    }
+
 
 }

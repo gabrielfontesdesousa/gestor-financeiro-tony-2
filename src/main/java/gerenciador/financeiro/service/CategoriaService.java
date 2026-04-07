@@ -22,10 +22,11 @@ public class CategoriaService {
     }
 
     public List<Categoria> listarCategorias() {
-        if (repository.listarTodas().isEmpty()){
+        List<Categoria> categoriaList = repository.listarTodas();
+        if (categoriaList.isEmpty()){
             throw new RuntimeException("Não existem categorias cadastradas");
         }
-        return repository.listarTodas();
+        return categoriaList;
     }
 
     public Categoria buscarCategoriaPorId(Integer id) {
