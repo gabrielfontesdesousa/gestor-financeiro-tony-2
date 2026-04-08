@@ -2,9 +2,7 @@ package gerenciador.financeiro.service;
 
 import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.repository.CategoriaRepository;
-import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -154,8 +152,5 @@ public class CategoriaServiceTest {
 
         verify(repository, times(1)).deletar(1);
     }
-
-
-
 
 }

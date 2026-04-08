@@ -22,7 +22,7 @@ public class Transacao {
     @Size(min = 3, max = 1000, message = "Campo deve estar entre 3 e 1000")
     private String descricao;
     private String tipo;
-    // ADICIONADO: campo categoriaId
+
     @NotNull(message = "Campo não pode ser nulo")
     private Integer categoriaId;
 
@@ -34,19 +34,6 @@ public class Transacao {
         this.descricao = descricao;
         this.tipo = tipo;
         this.categoriaId = categoriaId;
-    }
-
-    public Transacao(Double valor, LocalDateTime dataHora, String descricao, String tipo) {
-        this.valor = valor;
-        this.dataHora = dataHora;
-        this.descricao = descricao;
-        this.tipo = tipo;
-    }
-
-    public Transacao(Double valor, String descricao, String tipo) {
-        this.valor = valor;
-        this.descricao = descricao;
-        this.tipo = tipo;
     }
 
     public Integer getId() { return id; }
