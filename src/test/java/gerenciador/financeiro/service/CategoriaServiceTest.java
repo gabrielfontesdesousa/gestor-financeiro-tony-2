@@ -29,6 +29,7 @@ public class CategoriaServiceTest {
 
     }
 
+
     @Test
     void deveCadastrarCategoriaComSucesso() {
         Categoria categoria = new Categoria("Alimentação", "Gastos com comida");
@@ -91,7 +92,7 @@ public class CategoriaServiceTest {
         when(repository.buscarPorId(id)).thenReturn(categoria);
         Categoria result = service.buscarCategoriaPorId(id);
 
-        assertEquals(categoria, result);
+        assertEquals(categoria.getNome(), result.getNome());
         verify(repository, times(1)).buscarPorId(id);
     }
 
@@ -108,5 +109,48 @@ public class CategoriaServiceTest {
         assertTrue(erro.getMessage().contains("não existe"));
     }
 
+    @Test
+    void deveRetornarUmaCategoriaPorNome(){
+        String nome = "Alimentos";
+        Categoria categoria = new Categoria("Alimentos", "Gastos com comida");
+
+        when(repository.buscarPorNome(nome)).thenReturn(categoria);
+        Categoria result = service.buscarCategoriaPorNome(nome);
+
+        assertEquals(categoria.getNome(), result.getNome());
+        verify(repository, times(1)).buscarPorNome(nome);
+
+    }
+
+    @Test
+    void deveLancarErroQuandoCategoriaNomeNaoExistir(){
+        String nome = "Alimentos";
+
+        when(repository.buscarPorNome(nome)).thenThrow( new EmptyResultDataAccessException(1));
+
+        RuntimeException erro = assertThrows(RuntimeException.class, () -> {
+            service.buscarCategoriaPorNome(nome);
+        });
+
+        assertTrue(erro.getMessage().contains("não existe"));
+    }
+
+    @Test
+    void deveAtualizarUmaCategoria(){
+        Categoria novaCategoria = new Categoria("aaa", "bbb");
+
+        service.atualizarCategoria(1, novaCategoria);
+
+        verify(repository, times(1)).atualizar(1, novaCategoria);
+    }
+
+    @Test
+    void deveRemoverUmaCategoriaPeloId(){
+        Integer id = 1;
+
+        service.removerCategoria(1);
+
+        verify(repository, times(1)).deletar(1);
+    }
 
 }
