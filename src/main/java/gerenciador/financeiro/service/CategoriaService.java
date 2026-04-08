@@ -41,7 +41,7 @@ public class CategoriaService {
         try {
             return repository.buscarPorNome(nome);
         } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Categoria com o nome " + nome + "não existe");
         }
     }
 
