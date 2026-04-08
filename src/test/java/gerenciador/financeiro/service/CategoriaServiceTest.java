@@ -70,7 +70,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveRetornarErroSeListaVazia(){
+    void deveRetornarErroSeListaVazia() {
         List<Categoria> listaMock = new ArrayList<>();
 
         when(repository.listarTodas()).thenReturn(listaMock);
