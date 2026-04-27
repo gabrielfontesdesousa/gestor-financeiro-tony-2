@@ -144,7 +144,11 @@ public class CategoriaServiceTest {
     void deveRemoverUmaCategoriaPeloId() {
         Integer id = 1;
 
-        service.removerCategoria(1);
+        Categoria categoria = new Categoria("A", "B");
+
+        when(repository.buscarPorId(id)).thenReturn(categoria);
+
+        service.removerCategoria(id);
 
         verify(repository, times(1)).deletar(1);
     }
