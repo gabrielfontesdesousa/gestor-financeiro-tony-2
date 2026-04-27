@@ -2,8 +2,8 @@ package gerenciador.financeiro;
 
 import gerenciador.financeiro.db.ConexaoDB;
 import gerenciador.financeiro.db.InicializadorDB;
-import gerenciador.financeiro.enums.StatusTransacao;
 import gerenciador.financeiro.enums.TipoTransacao;
+import gerenciador.financeiro.exception.ValidationException;
 import gerenciador.financeiro.model.Categoria;
 import gerenciador.financeiro.model.Meta;
 import gerenciador.financeiro.model.Transacao;
@@ -41,133 +41,146 @@ public class Main {
     public static void menuPrincipal() {
         boolean executando = true;
 
-        while (executando) {
-            limparConsole();
-            System.out.println("=================================");
-            System.out.println("     GERENCIADOR FINANCEIRO");
-            System.out.println("=================================");
-            System.out.println("1 - Categorias");
-            System.out.println("2 - Transações");
-            System.out.println("3 - Metas");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
+            while (executando) {
+                limparConsole();
+                System.out.println("=================================");
+                System.out.println("     GERENCIADOR FINANCEIRO");
+                System.out.println("=================================");
+                System.out.println("1 - Categorias");
+                System.out.println("2 - Transações");
+                System.out.println("3 - Metas");
+                System.out.println("0 - Sair");
+                System.out.print("Escolha uma opção: ");
+                try {
+                int opcao = Integer.parseInt(leitor.nextLine());
 
-            int opcao = leitor.nextInt();
-            leitor.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    telaCategorias();
-                    break;
-                case 2:
-                    telaTransacoes();
-                    break;
-                case 3:
-                    telaMetas();
-                    break;
-                case 0:
-                    executando = false;
-                    System.out.println("Saindo do sistema...");
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
+                switch (opcao) {
+                    case 1:
+                        telaCategorias();
+                        break;
+                    case 2:
+                        telaTransacoes();
+                        break;
+                    case 3:
+                        telaMetas();
+                        break;
+                    case 0:
+                        executando = false;
+                        System.out.println("Saindo do sistema...");
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                        pausar();
+                }
+            } catch (Exception e) {
+                    System.out.println("Insira uma opção válida");
                     pausar();
-            }
+                }
         }
     }
 
     public static void telaCategorias() {
         boolean voltar = false;
 
-        while (!voltar) {
-            limparConsole();
-            System.out.println("=================================");
-            System.out.println("         MENU CATEGORIAS");
-            System.out.println("=================================");
-            System.out.println("1 - Cadastrar categoria");
-            System.out.println("2 - Listar categorias");
-            System.out.println("3 - Buscar por id");
-            System.out.println("4 - Buscar por nome");
-            System.out.println("5 - Atualizar categoria");
-            System.out.println("6 - Deletar categoria");
-            System.out.println("0 - Voltar");
-            System.out.print("Escolha uma opção: ");
+            while (!voltar) {
+                try {
+                limparConsole();
+                System.out.println("=================================");
+                System.out.println("         MENU CATEGORIAS");
+                System.out.println("=================================");
+                System.out.println("1 - Cadastrar categoria");
+                System.out.println("2 - Listar categorias");
+                System.out.println("3 - Buscar por id");
+                System.out.println("4 - Buscar por nome");
+                System.out.println("5 - Atualizar categoria");
+                System.out.println("6 - Deletar categoria");
+                System.out.println("0 - Voltar");
+                System.out.print("Escolha uma opção: ");
 
-            int opcao = leitor.nextInt();
-            leitor.nextLine();
+                int opcao = leitor.nextInt();
+                leitor.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    System.out.println(">>> Cadastrar categoria");
-                    System.out.println("Nome da categoria:");
-                    String nome = leitor.nextLine();
-                    System.out.println("Descrição: ");
-                    String desc = leitor.nextLine();
-                    Categoria categoria = new Categoria(nome, desc);
-                    categoriaService.cadastrarCategoria(categoria);
-                    System.out.println("Categoria registrada com sucesso!");
+
+                switch (opcao) {
+                    case 1:
+                        System.out.println(">>> Cadastrar categoria");
+                        System.out.println("Nome da categoria:");
+                        String nome = leitor.nextLine();
+                        System.out.println("Descrição: ");
+                        String desc = leitor.nextLine();
+                        Categoria categoria = new Categoria(nome, desc);
+                        categoriaService.cadastrarCategoria(categoria);
+                        System.out.println("Categoria registrada com sucesso!");
+                        pausar();
+                        break;
+                    case 2:
+                        System.out.println(">>> Listar categorias");
+                        categoriaService.listarCategorias().forEach(c -> {
+                            System.out.println("ID: " + c.getId());
+                            System.out.println("Nome: " + c.getNome());
+                            System.out.println("Descrição: " + c.getDescricao());
+                            System.out.println("------------------");
+                        });
+                        pausar();
+                        break;
+                    case 3:
+                        System.out.println(">>> Buscar categoria por id");
+                        System.out.println("Informe o id que deseja buscar: ");
+                        Integer id = leitor.nextInt();
+                        leitor.nextLine();
+                        categoria = categoriaService.buscarCategoriaPorId(id);
+                        System.out.println(categoria.toString());
+                        pausar();
+                        break;
+                    case 4:
+                        System.out.println(">>> Buscar categoria por nome");
+                        System.out.println("Informe o nome da categoria: ");
+                        String buscarNome = leitor.nextLine();
+                        categoria = categoriaService.buscarCategoriaPorNome(buscarNome);
+                        System.out.println(categoria.toString());
+                        pausar();
+                        break;
+                    case 5:
+                        System.out.println(">>> Atualizar categoria");
+                        System.out.println("Informe o ID da categoria a ser atualizada: ");
+                        id = leitor.nextInt();
+                        leitor.nextLine();
+                        System.out.println("Novo nome:");
+                        String novoNome = leitor.nextLine();
+                        System.out.println("Nova descrição:");
+                        String novaDescricao = leitor.nextLine();
+                        categoria = categoriaService.buscarCategoriaPorId(id);
+                        categoria.setNome(novoNome);
+                        categoria.setDescricao(novaDescricao);
+                        categoriaService.atualizarCategoria(id, categoria);
+                        System.out.println(categoria.toString());
+                        System.out.println("Categoria atualizada!");
+                        pausar();
+                        break;
+                    case 6:
+                        System.out.println(">>> Deletar categoria");
+                        System.out.println("Informe o ID da categoria a ser deletada: ");
+                        id = leitor.nextInt();
+                        leitor.nextLine();
+                        categoriaService.removerCategoria(id);
+                        System.out.println("Categoria removida!");
+                        pausar();
+                        break;
+                    case 0:
+                        voltar = true;
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                        pausar();
+                }
+            } catch (ValidationException e) {
+                    System.out.println(e.getMessage());
                     pausar();
-                    break;
-                case 2:
-                    System.out.println(">>> Listar categorias");
-                    categoriaService.listarCategorias().forEach(c -> {
-                        System.out.println("ID: " + c.getId());
-                        System.out.println("Nome: " + c.getNome());
-                        System.out.println("Descrição: " + c.getDescricao());
-                        System.out.println("------------------");
-                    });
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                     pausar();
-                    break;
-                case 3:
-                    System.out.println(">>> Buscar categoria por id");
-                    System.out.println("Informe o id que deseja buscar: ");
-                    Integer id = leitor.nextInt();
-                    leitor.nextLine();
-                    categoria = categoriaService.buscarCategoriaPorId(id);
-                    System.out.println(categoria.toString());
-                    pausar();
-                    break;
-                case 4:
-                    System.out.println(">>> Buscar categoria por nome");
-                    System.out.println("Informe o nome da categoria: ");
-                    String buscarNome = leitor.nextLine();
-                    categoria = categoriaService.buscarCategoriaPorNome(buscarNome);
-                    System.out.println(categoria.toString());
-                    pausar();
-                    break;
-                case 5:
-                    System.out.println(">>> Atualizar categoria");
-                    System.out.println("Informe o ID da categoria a ser atualizada: ");
-                    id = leitor.nextInt();
-                    leitor.nextLine();
-                    System.out.println("Novo nome:");
-                    String novoNome = leitor.nextLine();
-                    System.out.println("Nova descrição:");
-                    String novaDescricao = leitor.nextLine();
-                    categoria = categoriaService.buscarCategoriaPorId(id);
-                    categoria.setNome(novoNome);
-                    categoria.setDescricao(novaDescricao);
-                    categoriaService.atualizarCategoria(id, categoria);
-                    System.out.println(categoria.toString());
-                    System.out.println("Categoria atualizada!");
-                    pausar();
-                    break;
-                case 6:
-                    System.out.println(">>> Deletar categoria");
-                    System.out.println("Informe o ID da categoria a ser deletada: ");
-                    id = leitor.nextInt();
-                    leitor.nextLine();
-                    categoriaService.removerCategoria(id);
-                    System.out.println("Categoria removida!");
-                    pausar();
-                    break;
-                case 0:
-                    voltar = true;
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
-                    pausar();
-            }
+                }
         }
     }
 

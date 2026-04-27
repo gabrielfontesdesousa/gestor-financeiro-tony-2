@@ -71,16 +71,12 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveRetornarErroSeListaVazia() {
+    void deveRetornarListaVazia() {
         List<Categoria> listaMock = new ArrayList<>();
 
         when(repository.listarTodas()).thenReturn(listaMock);
-
-        RuntimeException erro = assertThrows(RuntimeException.class, () -> {
-            service.listarCategorias();
-        });
-
-        assertTrue(erro.getMessage().contains("Não existem categorias"));
+        List<Categoria> result = repository.listarTodas();
+        assertEquals( listaMock, result);
         verify(repository, times(1)).listarTodas();
     }
 
@@ -110,7 +106,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveRetornarUmaCategoriaPorNome(){
+    void deveRetornarUmaCategoriaPorNome() {
         String nome = "Alimentos";
         Categoria categoria = new Categoria("Alimentos", "Gastos com comida");
 
@@ -123,10 +119,10 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveLancarErroQuandoCategoriaNomeNaoExistir(){
+    void deveLancarErroQuandoCategoriaNomeNaoExistir() {
         String nome = "Alimentos";
 
-        when(repository.buscarPorNome(nome)).thenThrow( new EmptyResultDataAccessException(1));
+        when(repository.buscarPorNome(nome)).thenThrow(new EmptyResultDataAccessException(1));
 
         RuntimeException erro = assertThrows(RuntimeException.class, () -> {
             service.buscarCategoriaPorNome(nome);
@@ -136,7 +132,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveAtualizarUmaCategoria(){
+    void deveAtualizarUmaCategoria() {
         Categoria novaCategoria = new Categoria("aaa", "bbb");
 
         service.atualizarCategoria(1, novaCategoria);
@@ -145,7 +141,7 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void deveRemoverUmaCategoriaPeloId(){
+    void deveRemoverUmaCategoriaPeloId() {
         Integer id = 1;
 
         service.removerCategoria(1);

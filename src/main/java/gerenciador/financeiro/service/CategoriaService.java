@@ -17,14 +17,14 @@ public class CategoriaService {
     }
 
     public void cadastrarCategoria(Categoria categoria) {
-        ValidatorUtil.validar(categoria);
-        repository.salvar(categoria);
+            ValidatorUtil.validar(categoria);
+            repository.salvar(categoria);
     }
 
     public List<Categoria> listarCategorias() {
         List<Categoria> categoriaList = repository.listarTodas();
         if (categoriaList.isEmpty()){
-            throw new RuntimeException("Não existem categorias cadastradas");
+            System.out.println("Não existem categorias cadastradas");
         }
         return categoriaList;
     }
@@ -41,15 +41,23 @@ public class CategoriaService {
         try {
             return repository.buscarPorNome(nome);
         } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException("Categoria com o nome " + nome + "não existe");
+            throw new RuntimeException("Categoria com o nome " + nome + " não existe");
         }
     }
 
     public void atualizarCategoria(Integer id, Categoria categoria) {
+        ValidatorUtil.validar(categoria);
         repository.atualizar(id, categoria);
     }
 
     public void removerCategoria(Integer id) {
-        repository.deletar(id);
+        Categoria categoria = buscarCategoriaPorId(id);
+
+        if (categoria == null){
+            System.out.println("Categoria com ID: " + id + " não existe!");
+        }
+        else {
+            repository.deletar(id);
+        }
     }
 }

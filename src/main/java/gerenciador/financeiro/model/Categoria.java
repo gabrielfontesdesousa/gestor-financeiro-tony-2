@@ -1,4 +1,5 @@
 package gerenciador.financeiro.model;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -23,14 +24,12 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return "Categoria:"
-                + '\n' +
-                "ID: " + id + '\n' +
-                "Nome: " + nome + '\n' +
-                "Descrição: " + descricao;
+        return "Categoria:" + '\n' + "ID: " + id + '\n' + "Nome: " + nome + '\n' + "Descrição: " + descricao;
     }
+
     public Categoria() {
     }
+
     public Categoria(String nome, String desc) {
         this.nome = nome;
         this.descricao = desc;
