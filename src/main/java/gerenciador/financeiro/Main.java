@@ -13,11 +13,13 @@ import gerenciador.financeiro.repository.TransacaoRepository;
 import gerenciador.financeiro.service.CategoriaService;
 import gerenciador.financeiro.service.MetaService;
 import gerenciador.financeiro.service.TransacaoService;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -41,17 +43,17 @@ public class Main {
     public static void menuPrincipal() {
         boolean executando = true;
 
-            while (executando) {
-                limparConsole();
-                System.out.println("=================================");
-                System.out.println("     GERENCIADOR FINANCEIRO");
-                System.out.println("=================================");
-                System.out.println("1 - Categorias");
-                System.out.println("2 - Transações");
-                System.out.println("3 - Metas");
-                System.out.println("0 - Sair");
-                System.out.print("Escolha uma opção: ");
-                try {
+        while (executando) {
+            limparConsole();
+            System.out.println("=================================");
+            System.out.println("     GERENCIADOR FINANCEIRO");
+            System.out.println("=================================");
+            System.out.println("1 - Categorias");
+            System.out.println("2 - Transações");
+            System.out.println("3 - Metas");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
+            try {
                 int opcao = Integer.parseInt(leitor.nextLine());
 
 
@@ -73,18 +75,18 @@ public class Main {
                         System.out.println("Opção inválida!");
                         pausar();
                 }
-            } catch (Exception e) {
-                    System.out.println("Insira uma opção válida");
-                    pausar();
-                }
+            } catch (NumberFormatException n) {
+                System.out.println("Insira uma opção válida");
+                pausar();
+            }
         }
     }
 
     public static void telaCategorias() {
         boolean voltar = false;
 
-            while (!voltar) {
-                try {
+        while (!voltar) {
+            try {
                 limparConsole();
                 System.out.println("=================================");
                 System.out.println("         MENU CATEGORIAS");
@@ -175,12 +177,16 @@ public class Main {
                         pausar();
                 }
             } catch (ValidationException e) {
-                    System.out.println(e.getMessage());
-                    pausar();
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    pausar();
-                }
+                System.out.println(e.getMessage());
+                pausar();
+            } catch (InputMismatchException i) {
+                System.out.println("Insira uma opcão válida");
+                leitor.nextLine();
+                pausar();
+            } catch (RuntimeException em) {
+                System.out.println(em.getMessage());
+                pausar();
+            }
         }
     }
 
