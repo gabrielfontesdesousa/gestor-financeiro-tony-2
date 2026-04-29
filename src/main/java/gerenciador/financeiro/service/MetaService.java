@@ -53,12 +53,14 @@ public class MetaService {
     }
 
     public void removerMeta(Integer id){
-        try{
+        Meta meta = buscarMetaPorId(id);
+        if (meta == null){
+            System.out.println("Meta com ID: " + id + " não existe!");
+        }
+        else {
             metaRepository.deletar(id);
             System.out.println("Meta com ID: " + id + " foi removida!");
         }
-        catch (EmptyResultDataAccessException e){
-            throw new RuntimeException("Meta com ID: " + id + " não existe.");
-        }
+
     }
 }
