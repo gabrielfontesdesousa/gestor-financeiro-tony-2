@@ -10,6 +10,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +44,20 @@ public class TransacaoService {
         }
 
         return repository.buscarPorId(id);
+    }
+
+    public List<Transacao> listarPorTipo(String tipo) {
+        List<Transacao> transacoes = repository.listarTodas();
+
+        List<Transacao> filtradas = new ArrayList<>();
+
+        for (Transacao transacao : transacoes) {
+            if (transacao.getTipo().equalsIgnoreCase(tipo)) {
+                filtradas.add(transacao);
+            }
+        }
+
+        return filtradas;
     }
 
     public void removerTransacao(Integer id) {

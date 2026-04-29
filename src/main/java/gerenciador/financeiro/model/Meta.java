@@ -66,7 +66,4 @@ public class Meta {
         return dataLimite;
     }
 
-    public void setDataLimite(LocalDate dataLimite) {
-        this.dataLimite = dataLimite;
-    }
 }

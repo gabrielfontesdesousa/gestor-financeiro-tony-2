@@ -205,130 +205,137 @@ public class Main {
             System.out.println("5 - Deletar transação");
             System.out.println("0 - Voltar");
             System.out.print("Escolha uma opção: ");
+            try {
 
-            int opcao = leitor.nextInt();
-            leitor.nextLine();
+                int opcao = leitor.nextInt();
+                leitor.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    System.out.println(">>> Cadastrar transação");
-
-
-                    System.out.print("Valor da transação: ");
-                    Double valor = leitor.nextDouble();
-                    leitor.nextLine();
+                switch (opcao) {
+                    case 1:
+                        System.out.println(">>> Cadastrar transação");
 
 
-                    System.out.print("Descrição: ");
-                    String descricao = leitor.nextLine();
+                        System.out.print("Valor da transação: ");
+                        Double valor = leitor.nextDouble();
+                        leitor.nextLine();
 
 
-                    System.out.println("Tipo da transação:");
-                    System.out.println("  1 - Receita");
-                    System.out.println("  2 - Despesa");
-                    System.out.print("Escolha: ");
-                    int tipoOpcao = leitor.nextInt();
-                    leitor.nextLine();
-                    String tipo = (tipoOpcao == 1) ? "RECEITA" : "DESPESA";
+                        System.out.print("Descrição: ");
+                        String descricao = leitor.nextLine();
 
-                    LocalDateTime dataHora = LocalDateTime.now();
 
-                    System.out.println("\nCategorias disponíveis:");
-                    List<Categoria> categorias = categoriaService.listarCategorias();
+                        System.out.println("Tipo da transação:");
+                        System.out.println("  1 - Receita");
+                        System.out.println("  2 - Despesa");
+                        System.out.print("Escolha: ");
+                        int tipoOpcao = leitor.nextInt();
+                        leitor.nextLine();
+                        String tipo = (tipoOpcao == 1) ? "RECEITA" : "DESPESA";
 
-                    if (categorias == null || categorias.isEmpty()) {
-                        System.out.println("Nenhuma categoria cadastrada. Cadastre uma categoria primeiro.");
+                        LocalDateTime dataHora = LocalDateTime.now();
+
+                        System.out.println("\nCategorias disponíveis:");
+                        List<Categoria> categorias = categoriaService.listarCategorias();
+
+                        if (categorias == null || categorias.isEmpty()) {
+                            System.out.println("Nenhuma categoria cadastrada. Cadastre uma categoria primeiro.");
+                            pausar();
+                            break;
+                        }
+
+                        categorias.forEach(c -> System.out.println("  [" + c.getId() + "] " + c.getNome() + " - " + c.getDescricao()));
+
+                        System.out.print("Informe o ID da categoria: ");
+                        Integer categoriaId = leitor.nextInt();
+                        leitor.nextLine();
+
+
+                        Categoria categoriaSelecionada = categoriaService.buscarCategoriaPorId(categoriaId);
+                        if (categoriaSelecionada == null) {
+                            System.out.println("Categoria não encontrada. Transação não cadastrada.");
+                            pausar();
+                            break;
+                        }
+
+
+                        Transacao transacao = new Transacao(valor, dataHora, descricao, tipo, categoriaId);
+                        transacaoService.cadastrarTransacao(transacao);
                         pausar();
                         break;
-                    }
 
-                    categorias.forEach(c -> System.out.println("  [" + c.getId() + "] " + c.getNome() + " - " + c.getDescricao()));
-
-                    System.out.print("Informe o ID da categoria: ");
-                    Integer categoriaId = leitor.nextInt();
-                    leitor.nextLine();
-
-
-                    Categoria categoriaSelecionada = categoriaService.buscarCategoriaPorId(categoriaId);
-                    if (categoriaSelecionada == null) {
-                        System.out.println("Categoria não encontrada. Transação não cadastrada.");
+                    case 2:
+                        System.out.println(">>> Listar transações");
+                        List<Transacao> lista = transacaoService.listarTransacoes();
+                        if (lista == null || lista.isEmpty()) {
+                            System.out.println("Nenhuma transação cadastrada.");
+                        } else {
+                            lista.forEach(t -> {
+                                System.out.println("ID: " + t.getId());
+                                System.out.println("Valor: R$ " + t.getValor());
+                                System.out.println("Data/Hora: " + (t.getDataHora() != null ? t.getDataHora().format(formatter) : "não informada"));
+                                System.out.println("Descrição: " + t.getDescricao());
+                                System.out.println("Tipo: " + t.getTipo());
+                                System.out.println("Status: " + t.getStatus());
+                                System.out.println("Categoria ID: " + t.getCategoriaId());
+                                System.out.println("------------------");
+                            });
+                        }
                         pausar();
                         break;
-                    }
 
+                    case 3:
+                        System.out.println(">>> Buscar transação por ID");
+                        System.out.print("Informe o ID: ");
+                        Integer id = leitor.nextInt();
+                        leitor.nextLine();
+                        Transacao encontrada = transacaoService.buscarTransacaoPorId(id);
+                        if (encontrada != null) {
+                            System.out.println("ID: " + encontrada.getId());
+                            System.out.println("Valor: R$ " + encontrada.getValor());
+                            System.out.println("Data/Hora: " + (encontrada.getDataHora() != null ? encontrada.getDataHora().format(formatter) : "não informada"));
+                            System.out.println("Descrição: " + encontrada.getDescricao());
+                            System.out.println("Tipo: " + encontrada.getTipo());
+                            System.out.println("Categoria ID: " + encontrada.getCategoriaId());
+                        } else {
+                            System.out.println("Transação não encontrada.");
+                        }
+                        pausar();
+                        break;
 
-                    Transacao transacao = new Transacao(valor, dataHora, descricao, tipo, categoriaId);
-                    transacaoService.cadastrarTransacao(transacao);
-                    pausar();
-                    break;
+                    case 4:
+                        System.out.println(">>> Listar transações por tipo");
+                        System.out.println("  1 - Receita  |  2 - Despesa");
+                        System.out.print("Escolha: ");
+                        int filtroOpcao = leitor.nextInt();
+                        leitor.nextLine();
+                        String filtro = (filtroOpcao == 1) ? "Receita" : "Despesa";
+                        System.out.println(transacaoService.listarPorTipo(filtro));
+                        pausar();
+                        break;
 
-                case 2:
-                    System.out.println(">>> Listar transações");
-                    List<Transacao> lista = transacaoService.listarTransacoes();
-                    if (lista == null || lista.isEmpty()) {
-                        System.out.println("Nenhuma transação cadastrada.");
-                    } else {
-                        lista.forEach(t -> {
-                            System.out.println("ID: " + t.getId());
-                            System.out.println("Valor: R$ " + t.getValor());
-                            System.out.println("Data/Hora: " + (t.getDataHora() != null ? t.getDataHora().format(formatter) : "não informada"));
-                            System.out.println("Descrição: " + t.getDescricao());
-                            System.out.println("Tipo: " + t.getTipo());
-                            System.out.println("Status: " + t.getStatus());
-                            System.out.println("Categoria ID: " + t.getCategoriaId());
-                            System.out.println("------------------");
-                        });
-                    }
-                    pausar();
-                    break;
+                    case 5:
+                        System.out.println(">>> Deletar transação");
+                        System.out.print("Informe o ID: ");
+                        Integer idDel = leitor.nextInt();
+                        leitor.nextLine();
+                        transacaoService.removerTransacao(idDel);
+                        pausar();
+                        break;
 
-                case 3:
-                    System.out.println(">>> Buscar transação por ID");
-                    System.out.print("Informe o ID: ");
-                    Integer id = leitor.nextInt();
-                    leitor.nextLine();
-                    Transacao encontrada = transacaoService.buscarTransacaoPorId(id);
-                    if (encontrada != null) {
-                        System.out.println("ID: " + encontrada.getId());
-                        System.out.println("Valor: R$ " + encontrada.getValor());
-                        System.out.println("Data/Hora: " + (encontrada.getDataHora() != null ? encontrada.getDataHora().format(formatter) : "não informada"));
-                        System.out.println("Descrição: " + encontrada.getDescricao());
-                        System.out.println("Tipo: " + encontrada.getTipo());
-                        System.out.println("Categoria ID: " + encontrada.getCategoriaId());
-                    } else {
-                        System.out.println("Transação não encontrada.");
-                    }
-                    pausar();
-                    break;
-
-                case 4:
-                    System.out.println(">>> Listar transações por tipo");
-                    System.out.println("  1 - Receita  |  2 - Despesa");
-                    System.out.print("Escolha: ");
-                    int filtroOpcao = leitor.nextInt();
-                    leitor.nextLine();
-                    TipoTransacao filtro = (filtroOpcao == 1) ? TipoTransacao.RECEITA : TipoTransacao.DESPESA;
-                    System.out.println(transacaoService.listarTransacoes().toString());
-                    pausar();
-                    break;
-
-                case 5:
-                    System.out.println(">>> Deletar transação");
-                    System.out.print("Informe o ID: ");
-                    Integer idDel = leitor.nextInt();
-                    leitor.nextLine();
-                    transacaoService.removerTransacao(idDel);
-                    pausar();
-                    break;
-
-                case 0:
-                    voltar = true;
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
-                    pausar();
+                    case 0:
+                        voltar = true;
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                        pausar();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Insira uma opcão válida");
+                leitor.nextLine();
+                pausar();
             }
         }
+
     }
 
     public static void telaMetas() {
@@ -346,99 +353,112 @@ public class Main {
             System.out.println("5 - Deletar meta");
             System.out.println("0 - Voltar");
             System.out.print("Escolha uma opção: ");
+            try {
 
-            int opcao = leitor.nextInt();
-            leitor.nextLine();
+                int opcao = leitor.nextInt();
+                leitor.nextLine();
 
-            switch (opcao) {
-                case 1:
-                    System.out.println(">>> Cadastrar meta");
+                switch (opcao) {
+                    case 1:
+                        System.out.println(">>> Cadastrar meta");
 
-                    System.out.print("Valor de Meta: ");
-                    Double valorFinal = leitor.nextDouble();
-                    leitor.nextLine();
+                        System.out.print("Valor de Meta: ");
+                        Double valorFinal = leitor.nextDouble();
+                        leitor.nextLine();
 
-                    System.out.print("Valor Atual: ");
-                    Double valorAtual = leitor.nextDouble();
-                    leitor.nextLine();
+                        System.out.print("Valor Atual: ");
+                        Double valorAtual = leitor.nextDouble();
+                        leitor.nextLine();
 
-                    System.out.print("Data limite (dd/MM/yyyy): ");
-                    String dataInput = leitor.nextLine();
+                        System.out.print("Data limite (dd/MM/yyyy): ");
+                        String dataInput = leitor.nextLine();
 
-                    LocalDate dataLimite;
+                        LocalDate dataLimite;
 
-                    try {
-                        dataLimite = LocalDate.parse(dataInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    } catch (DateTimeParseException e) {
-                        System.out.println("Formato de data inválido! Use dd/MM/yyyy");
+                        try {
+                            dataLimite = LocalDate.parse(dataInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Formato de data inválido! Use dd/MM/yyyy");
+                            pausar();
+                            break;
+                        }
+
+                        Meta meta = new Meta(valorFinal, valorAtual, dataLimite);
+                        metaService.cadastrarMeta(meta);
+
+                        System.out.println("Sua meta foi registrada com sucesso!");
                         pausar();
                         break;
-                    }
-
-                    Meta meta = new Meta(valorFinal, valorAtual, dataLimite);
-                    metaService.cadastrarMeta(meta);
-
-                    System.out.println("Sua meta foi registrada com sucesso!");
-                    pausar();
-                    break;
-                case 2:
-                    System.out.println(">>> Listar metas");
-                    metaService.listarMetas().forEach(m -> {
-                        System.out.println("Valor da Meta: " + m.getValorMeta());
-                        System.out.println("Valor Atual: " + m.getValorAtual());
-                        System.out.println("Data Limite: " + m.getDataLimite());
-                        System.out.println("------------------");
-                    });
-                    pausar();
-                    break;
-                case 3:
-                    System.out.println(">>> Atualizar meta");
-                    System.out.println("Informe o ID da meta a ser atualizada: ");
-                    int id = leitor.nextInt();
-                    leitor.nextLine();
-                    System.out.println("Novo valor da meta:");
-                    Double novaMeta = leitor.nextDouble();
-                    leitor.nextLine();
-                    meta = metaService.buscarMetaPorId(id);
-                    meta.setValorMeta(novaMeta);
-                    metaService.atualizarMeta(id, meta);
-                    System.out.println(meta.toString());
-                    System.out.println("Meta foi atualizada");
-                    pausar();
-                    break;
-                case 4:
-                    System.out.println(">>> Atualizar Progresso");
-                    System.out.println("Informe o ID da meta a ser atualizada: ");
-                    id = leitor.nextInt();
-                    leitor.nextLine();
-                    System.out.println("Novo valor atual:");
-                    Double novoValor = leitor.nextDouble();
-                    leitor.nextLine();
-                    meta = metaService.buscarMetaPorId(id);
-                    meta.setValorAtual(novoValor);
-                    metaService.atualizarProgressoMeta(id, novoValor);
-                    System.out.println(meta);
-                    System.out.println("Meta foi atualizada");
-                    pausar();
-                    break;
-                case 5:
-                    System.out.println(">>> Deletar meta");
-                    System.out.println("Informe o ID da meta a ser deletada: ");
-                    id = leitor.nextInt();
-                    leitor.nextLine();
-                    metaService.removerMeta(id);
-                    System.out.println("Meta removida!");
-                    pausar();
-                    break;
-                case 0:
-                    voltar = true;
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
-                    pausar();
+                    case 2:
+                        System.out.println(">>> Listar metas");
+                        metaService.listarMetas().forEach(m -> {
+                            System.out.println("Valor da Meta: " + m.getValorMeta());
+                            System.out.println("Valor Atual: " + m.getValorAtual());
+                            System.out.println("Data Limite: " + m.getDataLimite());
+                            System.out.println("------------------");
+                        });
+                        pausar();
+                        break;
+                    case 3:
+                        System.out.println(">>> Atualizar meta");
+                        System.out.println("Informe o ID da meta a ser atualizada: ");
+                        int id = leitor.nextInt();
+                        leitor.nextLine();
+                        System.out.println("Novo valor da meta:");
+                        Double novaMeta = leitor.nextDouble();
+                        leitor.nextLine();
+                        meta = metaService.buscarMetaPorId(id);
+                        meta.setValorMeta(novaMeta);
+                        metaService.atualizarMeta(id, meta);
+                        System.out.println(meta.toString());
+                        System.out.println("Meta foi atualizada");
+                        pausar();
+                        break;
+                    case 4:
+                        System.out.println(">>> Atualizar Progresso");
+                        System.out.println("Informe o ID da meta a ser atualizada: ");
+                        id = leitor.nextInt();
+                        leitor.nextLine();
+                        System.out.println("Novo valor atual:");
+                        Double novoValor = leitor.nextDouble();
+                        leitor.nextLine();
+                        meta = metaService.buscarMetaPorId(id);
+                        meta.setValorAtual(novoValor);
+                        metaService.atualizarProgressoMeta(id, novoValor);
+                        System.out.println(meta);
+                        System.out.println("Meta foi atualizada");
+                        pausar();
+                        break;
+                    case 5:
+                        System.out.println(">>> Deletar meta");
+                        System.out.println("Informe o ID da meta a ser deletada: ");
+                        id = leitor.nextInt();
+                        leitor.nextLine();
+                        metaService.removerMeta(id);
+                        System.out.println("Meta removida!");
+                        pausar();
+                        break;
+                    case 0:
+                        voltar = true;
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                        pausar();
+                }
+            }  catch (InputMismatchException e) {
+                System.out.println("Valor digitado Inválido para o campo. Apenas numeros são Aceitos!");
+                leitor.nextLine();
+                pausar();
+            } catch (ValidationException v){
+                System.out.println(v.getMessage());
+                pausar();
+            } catch (RuntimeException r){
+                System.out.println(r.getMessage());
+                pausar();
             }
         }
     }
+
 
     public static void pausar() {
         System.out.println("\nPressione ENTER para continuar...");
